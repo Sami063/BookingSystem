@@ -12,7 +12,7 @@ export default function App() {
     <NavigationContainer>
       <Drawer.Navigator initialRouteName="Home">
         <Drawer.Screen name="Home" component={Home} />
-        <Drawer.Screen name="Notifications" component={UserScreen} />
+        <Drawer.Screen name="UserScreen" component={UserScreen} />
       </Drawer.Navigator>
     </NavigationContainer>
   );
