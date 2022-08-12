@@ -9,6 +9,6 @@ function Home({ navigation }) {
         />
         </View>
     );
-    }
+}
 
 export default Home
