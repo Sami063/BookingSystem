@@ -2,8 +2,8 @@ import * as React from 'react';
 import { Button, View } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
-import Home from './Components/Home';
-import UserScreen from './Components/UserScreen';
+import LoginForm from './Authentication/Login/LoginForm';
+import RegisterForm from './Authentication/Register/RegisterForm';
 
 const Drawer = createDrawerNavigator();
 
@@ -11,8 +11,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Drawer.Navigator initialRouteName="Home">
-        <Drawer.Screen name="Home" component={Home} />
-        <Drawer.Screen name="UserScreen" component={UserScreen} />
+        <Drawer.Screen name="Login" component={LoginForm} />
       </Drawer.Navigator>
     </NavigationContainer>
   );

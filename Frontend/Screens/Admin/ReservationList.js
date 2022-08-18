@@ -1,12 +1,13 @@
-import { View, Text } from 'react-native';
+import { View, Text, Button } from 'react-native';
 
 
-function UserScreen({ navigation }) {
+function ReservationList({ navigation }) {
     return (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <Text>Reservationnnn Screens</Text>
             <Button onPress={() => navigation.goBack()} title="Go back home" />
         </View>
-    );
-}
+        );
+    }
 
-export default UserScreen
+export default ReservationList;
