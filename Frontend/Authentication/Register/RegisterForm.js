@@ -34,7 +34,7 @@ function RegisterScreen() {
             // Use Axios to post data to mongo database
         }
         
-        axios.post('http://192.168.43.80:3002/register', {
+        axios.post('http://<portORip>/register', {
             fullName,
             email,
             password,
