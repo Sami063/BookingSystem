@@ -1,4 +1,5 @@
 import * as React from 'react';
+<<<<<<< Updated upstream
 import { Button, View } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
@@ -12,8 +13,14 @@ import More from './Screens/User/More';
 
 const Drawer = createDrawerNavigator();
 
+=======
+import AuthProvider from './Authentication/Context/AuthContext';
+import AppNavigation from './Navigation/AppNavigation';
+>>>>>>> Stashed changes
 export default function App() {
+
   return (
+<<<<<<< Updated upstream
     <NavigationContainer>
       <Drawer.Navigator initialRouteName="Discover">
         <Drawer.Screen name="Discover" component={Discover} />
@@ -25,3 +32,10 @@ export default function App() {
     </NavigationContainer>
   );
 }
+=======
+    <AuthProvider>
+      <AppNavigation/>
+    </AuthProvider>
+  );
+};
+>>>>>>> Stashed changes

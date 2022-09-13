@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import React, { useState } from 'react';
 import {  Button, Link, StyleSheet, TextInput, Text, View } from 'react-native';
 import DiscoveryList from './DicoveryList'
@@ -20,10 +21,19 @@ function DiscoverScreen({ navigation }) {
                     title="Go to List"
                 />
             </View>
+=======
+import { View, Button, Text } from 'react-native';
+
+function Discover({ navigation }) {
+    return (
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <Text>A list of all resturants !</Text>
+>>>>>>> Stashed changes
         </View>
     );
 }
 
+<<<<<<< Updated upstream
 const styles = StyleSheet.create({
     screen: {
         backgroundColor: '#15b103f6',
@@ -69,3 +79,6 @@ const styles = StyleSheet.create({
 })
 
 export default DiscoverScreen
+=======
+export default Discover
+>>>>>>> Stashed changes
