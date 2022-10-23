@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useNavigation} from '@react-navigation/native';
 function RegisterScreen() {
     // Object 
-    const [user, setUser] = useState([])
+    // const [userInfo, setUserInfo] = useState([])
     const [fullName, setFullName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -13,40 +13,41 @@ function RegisterScreen() {
     const navigation = useNavigation();
 
     const [success, setSuccess] = useState()
-    const [weather, setWeather] = useState()
-    
-    const Signup = () => {
 
-        // ip that is provided by android amulator
-    axios.post('http://172.17.176.1:4000/register', {
-        fullName,
-        email,
-        password,
-    })
-    .then(res => {
-    let userInfo = res.data;
-    console.log(userInfo)
-    setSuccess(true)
+    // for erorrs
+    const validForm = () => {
+        Object.values(userInfo).every(value => value.trim())
+        console.log(userInfo)
+    }
     
-    Alert.alert(
-            'Successfully registered'
-            )
+    
+    const [validation, setValidation] = useState(null)
+
+    const Signup = () => {
+    // asp.net core api backend
+    if(password === confirmPassword) {
+    axios.post('http://10.33.2.46:5001/api/user/register', {
+        FullName: fullName,
+        Email: email,
+        Password: password
+    })
+    .then((res) => {
+        console.log(res.data)
+        Alert.alert('Successfully registered')
+        
+        // navigating to the login screen after registration completed
         navigation.navigate('Login')
-    }) 
-    .catch(err => {
+        .catch(err => {
         console.log(`registration, ${err}`)
     });
+  })
+} else {
+        Alert.alert('field must be filled')
+        setValidation(false)
+    }
 }
 
-  // Get request from MongoDB - success
-//   useEffect(()=> { //
-//     axios.get('http://10.0.2.2:4000/api/user') 
-//     .then((response)=> {
-//     console.log(response.data)  
-//       }); 
-//     });
-    //exp://192.168.43.80:1900
-
+// Registration form
     return ( 
         <View style={styles.screen}>
             <Text style={styles.title}>Create your account</Text>
@@ -88,6 +89,7 @@ function RegisterScreen() {
     )
 }
 
+// Form styles
 const styles = StyleSheet.create({
     title: {
         fontSize: 20,
