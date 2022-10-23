@@ -1,11 +1,7 @@
-import { View, Text, Button, StyleSheet, onPress, Pressable } from 'react-native';
-import React, {useState} from 'react';
+import { View, Text, Button, StyleSheet, onPress, Pressable} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import axios from 'axios';
 import './Favorite';
-<<<<<<< Updated upstream
-
-
-function More({ navigation }) {
-=======
 import { useNavigation} from '@react-navigation/native';
 import { useRoute} from '@react-navigation/native';
 import Favorite from './Favorite';
@@ -13,7 +9,6 @@ import Account from './Account';
 function More() {
     
     const navigation = useNavigation();
->>>>>>> Stashed changes
 
     const [option, setOption] = useState([
         {name: 'Account', id: 1},
@@ -21,16 +16,12 @@ function More() {
         {name: 'Help center', id: 3},
     ]);
 
-<<<<<<< Updated upstream
-    return (
-=======
     const user = {
         fullName: 'Sameul G',
         email: '@example.com',
     }
         
-    
-
+    // Each click event have its own screen it depand on what you click, by default there is no screen displayed.
     const [screen, setScreen] = useState(null)
     function handleOption(name) {
         switch (name) {
@@ -41,10 +32,9 @@ function More() {
                 setScreen(Reservation())
                 break;
             case 'Help center':
-                setScreen(HelpCenter())
+                setScreen(helpCenter())
                 break;
         }  
-
     }
 
     const Account = () => {
@@ -68,51 +58,98 @@ function More() {
         )
     }
 
-    const Reservation = () => {
-
+    const helpCenter = () => {
+        
         return (
-            <View style={styles.screen}>
-            <Text style={styles.textHeader}>Here is your account infor, and reservations.</Text>
-            
-        </View>
+            <View style={{backgroundColor: 'orange', height: '100%', width: '100%'}}>
+                <Pressable onPress={() => setScreen(null)}> 
+                <Text>back</Text> 
+                </Pressable>
+
+            </View>
         )
     }
 
+    // Reservations screen
+    // Storing the api data in the setData state
+    const [data, setData] = useState([{}]);
+    const [thereIsData, setThereIsData] = useState(data);
+    
+    function noReservations() {
+        return  (
+        <View style={{backgroundColor: 'orange', height: '100%', width: '100%'}}>
+            <Pressable onPress={() => setScreen(null)}> 
+                <Text>Back</Text> 
+            </Pressable>
+            <View>
+                <Text style={{textAlign: 'center', marginTop: 50}}>No reservations</Text>
+            </View>
+        </View>
+        ) 
+    }
+    
+    // We get the reservation list from the back-end api
+    const Reservation = () => {
+        axios.get('http:/10.33.2.46:5001/api/reservation')
+        .then((res) => {
+            console.log(res.data)
+            setData(res.data);
+        })
+
+    // It will return reservations otherwise noReservations function method
+    if(thereIsData) {
+        return (
+            <View style={{backgroundColor: 'orange', height: '100%', width: '100%'}}>
+                <Pressable onPress={() => setScreen(null)}> 
+                    <Text>Back</Text> 
+                </Pressable>
+                <View style={styles.resContainer}>
+                {
+                    data.map((data) => {
+                        return (
+                        <View key={data.id} style={styles.resBox}>
+                            <Pressable>
+                                <Text> {data.resturantName}</Text>
+                                <Text> {data.dateTime}</Text>
+                                <Text> {data.arivalTime}</Text>
+                                {/* <Text> {data.partySize}</Text> */}
+                            </Pressable>
+                        </View>
+                        )
+                    })
+                }
+                </View>
+            </View>
+        ) 
+    } else {
+        return (
+            noReservations()
+        )
+    }
+}
+
+    // Main screen returns ...
     if(!screen) {
          return (
->>>>>>> Stashed changes
         <View style={styles.screen}>
-            <Text style={styles.textHeader}>Here is your account infor, and reservations.</Text>
+            <Text style={styles.textHeader}>Here is your account info, and reservations.</Text>
             {option.map((option) => { 
                 return (
-<<<<<<< Updated upstream
-                    <View style={styles.container}>
-                        <Pressable onPress={() => navigation.goBack()} style={styles.box}>
-                            <Text style={styles.text} Key={option.id}> {option.name}</Text>
+                    <View style={styles.container} key={option.id}>
+                        <Pressable onPress={() => handleOption(option.name)} style={styles.box}>
+                            <Text style={styles.text} > {option.name}</Text>
                         </Pressable>
                     </View>
-=======
-                    null
-                    // <View style={styles.container}>
-                    //     <Pressable onPress={() => handleOption(option.name)} style={styles.box}>
-                    //         <Text style={styles.text} Key={option.id}> {option.name}</Text>
-                    //     </Pressable>
-                    // </View>
->>>>>>> Stashed changes
-                )
+                ) 
             })}
         </View>
         );
-<<<<<<< Updated upstream
-    }
-=======
     } else {
         return (
             screen
         )
     }
    }
->>>>>>> Stashed changes
 
 const styles = StyleSheet.create({
     screen: {
@@ -120,11 +157,21 @@ const styles = StyleSheet.create({
         height: '100%',
     },
     container: {
-        alignItems: 'center',
+        alignItems: 'center', 
+    },
+    resContainer: {
+
     },
     box : {
         width : '85%',
         height : 30,
+        backgroundColor: 'white',
+        margin: 10,
+        borderRadius: 5,
+    },
+    resBox : {
+        width : '85%',
+        height : 80,
         backgroundColor: 'white',
         margin: 10,
         borderRadius: 5,
@@ -139,7 +186,15 @@ const styles = StyleSheet.create({
         marginTop: 30,
         marginBottom: 60,
         color: 'white',
-    }
+    }, 
+    cards : {
+        borderRadius: 5,
+        margin: 5,
+        backgroundColor: 'white',
+        width: 90,
+        height: 25,
+        // flexDirection: 'row',
+    },
 })
 
 export default More;
