@@ -5,28 +5,45 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export const AuthContext = createContext(); 
 
 const AuthProvider = ({children}) => {
-    const [isLoading, setIsLoading] = useState(false);
+    /*
+    isLoading: Will load while the user is login
+    userToken: We set the userToken to some text when the credential/login is valid, 
+    so the user can get access 
+    */
+    
+    const [isLoading, setIsLoading] = useState(false); 
     const [userToken, setUserToken] = useState(null); // By default is null
 
     // create a login function
     const login = (email, password) => {
-        setIsLoading(true)
-    const result = axios.post('http://10.0.2.2:4000/api/login', {
+        if(email == '' || password == '') {
+            setIsLoading(false)
+        } else {
+            setIsLoading(true)
+        }
+    // using post request to check if the user exist, will return status code of 200 if success
+    axios.post('http://10.33.2.46:5001/api/User/login', { 
         email,
         password,
     }).then((res) => {
         if(res.status === 200) {
             console.log(res.status)
             setIsLoading(false)
-        }
+        } 
         setUserToken('sometoken')
+        // 
         AsyncStorage.setItem('userToken', 'sometoken')
         // setUserToken('')
     })
+    .catch(err => {
+        setIsLoading(false)
+        console.log(err)
+    })
   }
   
-//   When Logged In
-
+  // When Logged In
+  // After user left the app, user will still be logged in
+  // After signing out of the app, user will be logged out and Item in AsyncStorage will  be removed 
     const LoggedIn = async () => {
         let userToken = await AsyncStorage.getItem('userToken')
         setUserToken(userToken)
@@ -48,5 +65,9 @@ const AuthProvider = ({children}) => {
         </AuthContext.Provider>
     )
 }
+
+
+
+
 
 export default AuthProvider;
