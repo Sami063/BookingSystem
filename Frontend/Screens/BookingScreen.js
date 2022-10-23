@@ -2,6 +2,7 @@ import { StyleSheet, Alert, Text, View, Pressable ,SafeAreaView, TextInput, onCh
 import { useNavigation} from '@react-navigation/native';
 import React, {useState} from 'react';
 import CalendarPicker from 'react-native-calendar-picker';
+import axios from 'axios';
 
 const BookingScreen = () => {
     // buttons
@@ -49,7 +50,11 @@ const BookingScreen = () => {
     const [tableNumber, setTableNumber] = useState()
     const [partySize, setPartySize] = useState(5)
     
-    
+
+
+
+
+
     // Start Of Calender
     const onDateChanged = (newDate) => {
         setDate(newDate.toString());
@@ -67,9 +72,9 @@ const BookingScreen = () => {
                 {
                     party.map((party) => {
                         return (
-                            <View>
+                            <View key={party.id}>
                                 <Pressable onPress={() => handleParty(party.id, party.size)} style={styles.partySizeBtn}>
-                                    <Text Key={party.id} style={styles.partyText}>{party.size}</Text>
+                                    <Text style={styles.partyText}>{party.size}</Text>
                                 </Pressable>
                             </View>
                         )
@@ -109,9 +114,9 @@ const BookingScreen = () => {
                 {
                     reservationTime.map((res) => {
                         return (
-                            <View>
+                            <View key={res.id}>
                                 <Pressable onPress={() => handleTime(res.id, res.time)} style={styles.btnTime}>
-                                    <Text Key={res.id} style={styles.timeText}>{res.time}</Text>
+                                    <Text  style={styles.timeText}>{res.time}</Text>
                                 </Pressable>
                             </View>
                         )
@@ -135,7 +140,9 @@ const BookingScreen = () => {
             </View>
         )
     }
+
     // Each click event have an id, state will be changing based on the event id, 
+    // Options
     const [name, setName] = useState('Continue')
     const handleChange = (id) => {
         if(id == 1) {
@@ -149,7 +156,7 @@ const BookingScreen = () => {
         }
     }
     
-    // Here is the state of the calender, time and recipt, by default the state have a Calender method
+    // Here is the state of the calender, time and recipt, by default the state have a Calender function method
     // !date, !newTime means if no time & date specified then will return null
     const [booking, setBooking] = useState(Calender)
     const [step, setStep] = useState(2)
@@ -161,17 +168,49 @@ const BookingScreen = () => {
                 'Please select a date'
                 )
         } else if(step == 2) {
-            setBooking(bookingTime())
+            setBooking(bookingTime()) 
             setStep(3)
         } else if(!newTime) {
             null
             Alert.alert('Please select a time')
-        } else {
+        } else if (step == 3) {
             setBooking(Recipt())
             setName('Confirm reservation')
-        } 
+            setStep(4)
+        } else if (step == 4) {
+            sendToBackend()
+            Alert.alert('Successfully confirmed')
+            returnToDefault()
+            
+        }
+    }
+    // Will return things to default
+    function returnToDefault() {
+        setBooking(Calender())
+        setStep(2)
+        setName('Continue')
+        setDate(null)
+        setNewTime(null)
+        setPartySize(null)
     }
 
+    function sendToBackend () {
+        axios.post("http://10.33.3.56:5001/api/Reservation/booking", {
+            ResturantName: resturantName,
+            DateTime: date,
+            ArivalTime: newTime,
+            PartySize: partySize,
+        })
+        .then(response => {
+            console.log(response.data)
+        })
+        .catch(err => {
+            console.log(err)
+        })
+        
+    }
+    
+    // Main BookingScreen will return this
     return (
     <SafeAreaView>
         <View style={styles.bookingScreen}>
@@ -179,9 +218,9 @@ const BookingScreen = () => {
         <View style={styles.buttons}>
             {options.map((option) => { 
                 return (
-                    <View style={styles.cardContainer}>
+                    <View key={option.name} style={styles.cardContainer}>
                         <Pressable onPress={() => handleChange(option.id)} style={styles.cards}>
-                            <Text style={styles.text} Key={option.name}> {option.name}</Text>
+                            <Text style={styles.text}> {option.name}</Text>
                         </Pressable>
                     </View>
                 )
@@ -193,7 +232,7 @@ const BookingScreen = () => {
             <View style={styles.ctr}>
             {
                 // Will be rendering after each button click
-                booking
+                booking 
             }
             </View>
             <View>
